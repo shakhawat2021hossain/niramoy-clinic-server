@@ -3,7 +3,7 @@ import type { Response } from "express";
 interface IResData<T> {
     statusCode: number;
     success: boolean;
-    messaage: string;
+    message: string;
     data: T | null | undefined;
 
 }
@@ -11,7 +11,7 @@ interface IResData<T> {
 export const sendResponse = <T>(res: Response, resData: IResData<T>) =>{
     res.status(resData.statusCode).json({
         success: resData.success,
-        message: resData.messaage,
-        data: resData.data || null || undefined
+        message: resData.message,
+        data: resData.data || null || undefined,
     })
 }
