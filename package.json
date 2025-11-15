@@ -3,6 +3,14 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "start": "node ./dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+    "build": "tsc",
+    "lint": "npx eslint ./src",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev2": "tsx watch ./src/server.ts"
+  },
   "peerDependencies": {
     "typescript": "^5"
   },
