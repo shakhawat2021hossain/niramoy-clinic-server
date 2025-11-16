@@ -1,5 +1,4 @@
 import { Router } from "express"
-import app from "../../app"
 import { userRoutes } from "../modules/user/user.route"
 import { authRoutes } from "../modules/auth/auth.route"
 
@@ -18,4 +17,4 @@ const moduleRoutes = [
     },
 ]
 
-moduleRoutes.forEach(route => app.use(route.path, route.route))
+moduleRoutes.forEach(route => router.use(route.path, route.route))

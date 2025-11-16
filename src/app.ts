@@ -3,6 +3,7 @@ import type { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
 import notFound from "./app/middleware/notFound";
+import { router } from "./app/route";
 
 const app: Application = express();
 app.use(cors({
@@ -22,6 +23,8 @@ app.get('/', (req: Request, res: Response) => {
         timeStamp: new Date().toISOString()
     })
 });
+
+app.use("/api/v1", router)
 
 
 
