@@ -3,6 +3,7 @@ import { prisma } from "../../utils/prisma"
 import type { IUser } from "./user.interface"
 import bcrypt from "bcrypt"
 import { fileUploader } from "../../utils/fileUpload"
+import { number } from "zod"
 
 const createPatient = async (req: Request) => {
     // console.log(payload)
@@ -39,7 +40,20 @@ const createPatient = async (req: Request) => {
 }
 
 
+const getAllUser = async({page, limit}: {page: number, limit: number}) =>{
+    console.log(page, limit)
+    const skip = (page - 1) * limit
+
+
+    const users = await prisma.user.findMany({
+        skip,
+        take: limit
+    })
+    return users
+}
+
+
 export const userServices = {
     createPatient,
-
+    getAllUser
 }
