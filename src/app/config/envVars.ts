@@ -11,4 +11,6 @@ export default {
     cloud_name: process.env.CLOUD_NAME,
     cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
     cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
+    access_token_secret: process.env.ACCESS_TOKEN_SECRET as string,
+    refresh_token_secret: process.env.REFRESH_TOKEN_SECRET as string,
 }

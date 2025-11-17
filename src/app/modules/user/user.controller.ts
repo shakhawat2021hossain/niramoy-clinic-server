@@ -7,7 +7,6 @@ import { sendResponse } from "../../utils/sendResponse";
 const createPatient = catchAsync(async (req: Request, res: Response) => {
 
     const result = await userServices.createPatient(req)
-    // console.log("body", req.file)
 
     sendResponse(res, {
         statusCode: httpStatus.CREATED,
