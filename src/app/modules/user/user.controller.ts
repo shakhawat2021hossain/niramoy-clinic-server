@@ -3,6 +3,7 @@ import { userServices } from "./user.service";
 import httpStatus from "http-status-codes"
 import catchAsync from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
+import { Role, Status, type IGetUsers } from "./user.interface";
 
 const createPatient = catchAsync(async (req: Request, res: Response) => {
 
@@ -18,21 +19,67 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+// const getAllUser = catchAsync(async (req: Request, res: Response) => {
+//     const { page = 1, limit = 10, search = "", sortBy = "createdAt", sortOrder = "asc", role , status } = req.query;
+//     // console.log(req.query)
+
+//     const result = await userServices.getAllUser({
+//         page: Number(page),
+//         limit: Number(limit),
+//         searchTerm: String(search),
+//         sortBy: String(sortBy),
+//         sortOrder: String(sortOrder),
+//         role,
+//         status
+//     })
+
+//     sendResponse(res, {
+//         statusCode: httpStatus.ACCEPTED,
+//         data: result,
+//         success: true,
+//         message: "User retreived successfully"
+//     })
+
+// })
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
-    const { page, limit } = req.query
-    const result = await userServices.getAllUser({
+    const {
+        page = 1,
+        limit = 10,
+        search = "",
+        sortBy = "createdAt",
+        sortOrder = "asc",
+        role,
+        status,
+    } = req.query;
+
+    const queryParams: IGetUsers = {
         page: Number(page),
-        limit: Number(limit)
-    })
+        limit: Number(limit),
+        searchTerm: String(search),
+        sortBy: String(sortBy),
+        sortOrder: String(sortOrder),
+    };
+    
+    
+    if (Object.values(Role).includes(role as Role)) {
+        queryParams.role = role as Role;
+    }
+    
+    
+    if (Object.values(Status).includes(status as Status)) {
+        queryParams.status = status as Status;
+    }
+    
+    console.log("qparams", queryParams)
+    const result = await userServices.getAllUser(queryParams);
 
     sendResponse(res, {
         statusCode: httpStatus.ACCEPTED,
         data: result,
         success: true,
-        message: "User retreived successfully"
-    })
-
-})
+        message: "User retrieved successfully",
+    });
+});
 
 export const userController = {
     createPatient,

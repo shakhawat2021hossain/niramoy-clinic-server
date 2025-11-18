@@ -1,13 +1,12 @@
 import type { Request } from "express"
 import { prisma } from "../../utils/prisma"
-import type { IUser } from "./user.interface"
 import bcrypt from "bcrypt"
 import { fileUploader } from "../../utils/fileUpload"
-import { number } from "zod"
+import type { IGetUsers } from "./user.interface"
 
 const createPatient = async (req: Request) => {
     // console.log(payload)
-    if(req.file){
+    if (req.file) {
         const uploadRes = await fileUploader.uploadToCloudinary(req.file)
         req.body.profilePhoto = uploadRes.secure_url
         console.log("fileup", uploadRes)
@@ -22,7 +21,7 @@ const createPatient = async (req: Request) => {
             data: {
                 email: payload.email,
                 password: hashedPass,
-                
+
             }
         })
 
@@ -34,22 +33,35 @@ const createPatient = async (req: Request) => {
             }
         })
     })
-    console.log("user creation",result)
-    return result
+    // console.log("user creation",result)
+    return result;
 
 }
 
 
-const getAllUser = async({page, limit}: {page: number, limit: number}) =>{
-    console.log(page, limit)
+const getAllUser = async ({ page, limit, searchTerm, sortBy, sortOrder, role, status }: IGetUsers) => {
+    console.log(page, limit, searchTerm, sortBy, sortOrder)
     const skip = (page - 1) * limit
 
 
     const users = await prisma.user.findMany({
         skip,
-        take: limit
+        take: limit,
+        where: {
+            email: {
+                contains: searchTerm,
+                mode: "insensitive"
+            },
+            role: role,
+            status: status
+        },
+        orderBy: sortBy && sortOrder ? {
+            [sortBy]: sortOrder
+        } : {
+            createdAt: "desc"
+        }
     })
-    return users
+    return users;
 }
 
 

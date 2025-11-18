@@ -4,3 +4,25 @@ export interface IUser {
     password: string;
     role: "PATIENT" | "DOCTOR" | "ADMIN"
 }
+
+export enum Role {
+    PATIENT="PATIENT",
+    DOCTOR="DOCTOR",
+    ADMIN="ADMIN"
+}
+
+export enum Status {
+    ACTIVE="ACTIVE",
+    INACTIVE="INACTIVE",
+    DELETED="DELETED"
+}
+
+export interface IGetUsers {
+    page: number; 
+    limit: number; 
+    searchTerm: string; 
+    sortBy: string;
+    sortOrder: string;
+    role?: Role;
+    status?: Status;
+}
