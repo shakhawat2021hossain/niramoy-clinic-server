@@ -12,3 +12,8 @@ export const generateTokens = (user: Partial<IUser>) => {
     }
 
 }
+
+export const verifyToken = (token: string, secret: string) =>{
+    const isVerified = jwt.verify(token, secret)
+    return isVerified
+}

@@ -3,7 +3,8 @@ import bcrypt from "bcrypt"
 import httpStatus from "http-status-codes"
 import { prisma } from "../../utils/prisma"
 import AppError from "../../utils/AppError"
-import { generateTokens } from "../../utils/generateTokens"
+import { generateTokens } from "../../utils/jwt"
+import envVars from "../../config/envVars"
 
 const login = async (payload: Partial<IUser>) => {
     // console.log(payload)
