@@ -38,6 +38,50 @@ const createPatient = async (req: Request) => {
 
 }
 
+const createDoctor = async (req: Request) => {
+    if (req.file) {
+        const uploadRes = await fileUploader.uploadToCloudinary(req.file)
+        req.body.profilePhoto = uploadRes.secure_url
+        // console.log("fileup", uploadRes)
+    }
+
+    const payload = req.body
+    console.log(payload)
+    const hashedPass = await bcrypt.hash(payload.password, 10)
+    // console.log("hashed", hashedPass)
+    const result = await prisma.$transaction(async (tnx) => {
+        await tnx.user.create({
+            data: {
+                email: payload.email,
+                password: hashedPass,
+
+            }
+        })
+
+        return await tnx.doctor.create({
+            data: {
+                email: payload.email,
+                name: payload.name,
+                profilePhoto: payload.profilePhoto,
+                registrationNumber: payload.registrationNumber,
+                designation: payload.designation,
+                qualification: payload.qualification,
+                appointmentFee: payload.appointmentFee,
+                currentWorkingPlace: payload.currentWorkingPlace,
+                contactNumber: payload.contactNumber,
+                gender: payload.gender
+            }
+        })
+    })
+    // console.log("user creation",result)
+    return result;
+
+}
+
+
+
+
+
 
 const getAllUser = async ({ page, limit, searchTerm, sortBy, sortOrder, role, status }: IGetUsers) => {
     console.log(page, limit, searchTerm, sortBy, sortOrder)
@@ -67,5 +111,6 @@ const getAllUser = async ({ page, limit, searchTerm, sortBy, sortOrder, role, st
 
 export const userServices = {
     createPatient,
+    createDoctor,
     getAllUser
 }

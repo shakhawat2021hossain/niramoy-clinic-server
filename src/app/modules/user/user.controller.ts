@@ -19,28 +19,20 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 })
 
 
-// const getAllUser = catchAsync(async (req: Request, res: Response) => {
-//     const { page = 1, limit = 10, search = "", sortBy = "createdAt", sortOrder = "asc", role , status } = req.query;
-//     // console.log(req.query)
+const createDoctor = catchAsync(async (req: Request, res: Response) => {
 
-//     const result = await userServices.getAllUser({
-//         page: Number(page),
-//         limit: Number(limit),
-//         searchTerm: String(search),
-//         sortBy: String(sortBy),
-//         sortOrder: String(sortOrder),
-//         role,
-//         status
-//     })
+    const result = await userServices.createDoctor(req)
 
-//     sendResponse(res, {
-//         statusCode: httpStatus.ACCEPTED,
-//         data: result,
-//         success: true,
-//         message: "User retreived successfully"
-//     })
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        data: result,
+        success: true,
+        message: "Doctor account created successfully"
+    })
 
-// })
+})
+
+
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
     const {
         page = 1,
@@ -83,5 +75,6 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
 
 export const userController = {
     createPatient,
-    getAllUser
+    getAllUser,
+    createDoctor
 }
