@@ -2,7 +2,7 @@ import { Router, type NextFunction, type Request, type Response } from "express"
 import { userController } from "./user.controller";
 import { fileUploader } from "../../utils/fileUpload";
 import { validateReq } from "../../middleware/validateReq";
-import { createDoctorZodSchema, createPatientZodSchema } from "./user.validation";
+import { createAdminZodSchema, createDoctorZodSchema, createPatientZodSchema } from "./user.validation";
 import { checkAuth } from "../../middleware/checkAuth";
 import { Role } from "./user.interface";
 
@@ -24,6 +24,16 @@ router.post(
         // console.log("abc", req.body)
         req.body = createDoctorZodSchema.parse(JSON.parse(req.body.data))
         return userController.createDoctor(req, res, next)
+    }
+)
+
+router.post(
+    '/create-admin',
+    fileUploader.upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        // console.log("abc", req.body)
+        req.body = createAdminZodSchema.parse(JSON.parse(req.body.data))
+        return userController.createAdmin(req, res, next)
     }
 )
 

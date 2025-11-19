@@ -2,7 +2,7 @@ import type { Request } from "express"
 import { prisma } from "../../utils/prisma"
 import bcrypt from "bcrypt"
 import { fileUploader } from "../../utils/fileUpload"
-import type { IGetUsers } from "./user.interface"
+import { Role, type IGetUsers } from "./user.interface"
 
 const createPatient = async (req: Request) => {
     // console.log(payload)
@@ -44,33 +44,56 @@ const createDoctor = async (req: Request) => {
         req.body.profilePhoto = uploadRes.secure_url
         // console.log("fileup", uploadRes)
     }
-
-    const payload = req.body
-    console.log(payload)
-    const hashedPass = await bcrypt.hash(payload.password, 10)
+    const hashedPass = await bcrypt.hash(req.body.password, 10)
     // console.log("hashed", hashedPass)
+    console.log("hitted")
+
+    const userData = {
+        email: req.body.doctor.email,
+        password: hashedPass,
+    }
     const result = await prisma.$transaction(async (tnx) => {
         await tnx.user.create({
             data: {
-                email: payload.email,
-                password: hashedPass,
-
+                ...userData,
+                role: Role.DOCTOR
             }
         })
 
         return await tnx.doctor.create({
+            data: req.body.doctor
+        })
+    })
+    // console.log("user creation",result)
+    return result;
+
+}
+
+
+const createAdmin = async (req: Request) => {
+    if (req.file) {
+        const uploadRes = await fileUploader.uploadToCloudinary(req.file)
+        req.body.profilePhoto = uploadRes.secure_url
+        // console.log("fileup", uploadRes)
+    }
+    const hashedPass = await bcrypt.hash(req.body.password, 10)
+    // console.log("hashed", hashedPass)
+    console.log("hitted")
+
+    const userData = {
+        email: req.body.admin.email,
+        password: hashedPass,
+    }
+    const result = await prisma.$transaction(async (tnx) => {
+        await tnx.user.create({
             data: {
-                email: payload.email,
-                name: payload.name,
-                profilePhoto: payload.profilePhoto,
-                registrationNumber: payload.registrationNumber,
-                designation: payload.designation,
-                qualification: payload.qualification,
-                appointmentFee: payload.appointmentFee,
-                currentWorkingPlace: payload.currentWorkingPlace,
-                contactNumber: payload.contactNumber,
-                gender: payload.gender
+                ...userData,
+                role: Role.ADMIN
             }
+        })
+
+        return await tnx.admin.create({
+            data: req.body.admin
         })
     })
     // console.log("user creation",result)
@@ -112,5 +135,6 @@ const getAllUser = async ({ page, limit, searchTerm, sortBy, sortOrder, role, st
 export const userServices = {
     createPatient,
     createDoctor,
+    createAdmin,
     getAllUser
 }

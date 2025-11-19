@@ -33,6 +33,20 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
+
+    const result = await userServices.createAdmin(req)
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        data: result,
+        success: true,
+        message: "Admin account created successfully"
+    })
+
+})
+
+
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
     const {
         page = 1,
@@ -76,5 +90,6 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
 export const userController = {
     createPatient,
     getAllUser,
-    createDoctor
+    createDoctor,
+    createAdmin
 }
