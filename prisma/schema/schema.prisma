@@ -1,11 +1,35 @@
-
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Schedule {
+    id        String   @id @default(uuid())
+    startTime DateTime
+    endTime   DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    doctorSchedules DoctorSchedules[]
+
+    @@map("schedules")
+}
+
+model DoctorSchedules {
+    doctorId   String
+    doctor     Doctor   @relation(fields: [doctorId], references: [id])
+    scheduleId String
+    schedule   Schedule @relation(fields: [scheduleId], references: [id])
+    isBooked   Boolean  @default(true)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@id([doctorId, scheduleId])
+    @@map("doctor_schedules")
 }
 
 
@@ -57,6 +81,8 @@ model Doctor {
     isDeleted           Boolean  @default(false)
     createdAt           DateTime @default(now())
     updatedAt           DateTime @updatedAt
+
+    doctorSchedules DoctorSchedules[]
 
     user User @relation(fields: [email], references: [email])
 
