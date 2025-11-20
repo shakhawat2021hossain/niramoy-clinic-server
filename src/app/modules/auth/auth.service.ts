@@ -1,4 +1,4 @@
-import type { IUser } from "../user/user.interface"
+import type { IUser, Role } from "../user/user.interface"
 import bcrypt from "bcrypt"
 import httpStatus from "http-status-codes"
 import { prisma } from "../../utils/prisma"
@@ -19,7 +19,7 @@ const login = async (payload: Partial<IUser>) => {
         throw new AppError(httpStatus.BAD_REQUEST, "Invalid Credentials")
     }
 
-    const {accessToken, refreshToken} = generateTokens({email: user.email, role: user.role})
+    const {accessToken, refreshToken} = generateTokens({email: user.email, role: user.role as Role})
 
     return {
         accessToken, 

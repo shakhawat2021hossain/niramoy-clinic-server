@@ -3,6 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "prisma": {
+    "schema": "./prisma/schema"
+  },
   "scripts": {
     "start": "node ./dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
@@ -23,12 +26,12 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.10.1",
-    "prisma": "^6.19.0",
+    "prisma": "6.16.3",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.20.6"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.0",
+    "@prisma/client": "6.16.3",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.8.0",
     "cookie-parser": "^1.4.7",

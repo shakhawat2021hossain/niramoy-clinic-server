@@ -1,7 +1,6 @@
 import { Router, type NextFunction, type Request, type Response } from "express";
 import { userController } from "./user.controller";
 import { fileUploader } from "../../utils/fileUpload";
-import { validateReq } from "../../middleware/validateReq";
 import { createAdminZodSchema, createDoctorZodSchema, createPatientZodSchema } from "./user.validation";
 import { checkAuth } from "../../middleware/checkAuth";
 import { Role } from "./user.interface";
