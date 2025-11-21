@@ -1,5 +1,7 @@
 import { addMinutes, set } from "date-fns";
 import { prisma } from "../../utils/prisma"
+import type { JwtPayload } from "jsonwebtoken";
+import { paginate, type IPaginateOp } from "../../utils/paginate";
 
 
 const createSchedules = async (payload: any) => {
@@ -48,7 +50,44 @@ const createSchedules = async (payload: any) => {
     return schedules;
 };
 
+const getAvailableSchedulesForDoctor = async (payload: JwtPayload, queryParams: IPaginateOp) => {
+
+    // const {} = paginate()
+    const { limit, page, skip, sortBy, sortOrder } = queryParams
+    console.log(queryParams)
+
+    const doctor = await prisma.doctor.findUniqueOrThrow({
+        where: { email: payload.email }
+    });
+
+    // already assigned
+    const assignedScheduleIds = await prisma.doctorSchedules.findMany({
+        where: { doctorId: doctor.id },
+        select: { scheduleId: true }
+
+    });
+    // console.log(assignedScheduleIds)
+
+    const takenIds = assignedScheduleIds.map(item => item.scheduleId); // ["id1", "id2", ....]
+
+    // available
+    const availableSchedules = await prisma.schedule.findMany({
+        where: {
+            id: { notIn: takenIds }
+        },
+        skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder
+        }
+    });
+
+    return availableSchedules;
+};
+
+
 
 export const scheduleServices = {
-    createSchedules
+    createSchedules,
+    getAvailableSchedulesForDoctor
 }

@@ -23,6 +23,8 @@ const addSchedule = async (user: JwtPayload, payload: { scheduleIds: string[] })
 
 }
 
+
+
 export const drScheduleServices = {
     addSchedule
 }

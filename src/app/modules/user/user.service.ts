@@ -107,7 +107,7 @@ const createAdmin = async (req: Request) => {
 
 
 const getAllUser = async ({ page, limit, searchTerm, sortBy, sortOrder, role, status }: IGetUsers) => {
-    console.log(page, limit, searchTerm, sortBy, sortOrder)
+    // console.log(page, limit, searchTerm, sortBy, sortOrder)
     const skip = (page - 1) * limit
 
 
