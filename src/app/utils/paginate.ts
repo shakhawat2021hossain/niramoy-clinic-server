@@ -10,7 +10,7 @@ export interface IPaginateOp {
     limit: number;
     sortBy: string;
     sortOrder: "asc" | "desc";
-    skip: number
+    skip: number;
 };
 
 

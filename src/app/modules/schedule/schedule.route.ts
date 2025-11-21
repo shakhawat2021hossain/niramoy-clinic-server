@@ -8,5 +8,6 @@ const router = Router()
 
 router.post('/', scheduleControllers.schedule)
 router.get('/available-schedules-for-dr', checkAuth(Role.DOCTOR), scheduleControllers.getAvailableSchedulesForDoctor)
+router.delete('/delete-schedule/:id', scheduleControllers.deleteSchedule)
 
 export const scheduleRoutes = router

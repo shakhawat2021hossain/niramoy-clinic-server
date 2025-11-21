@@ -3,7 +3,8 @@ import { userServices } from "./user.service";
 import httpStatus from "http-status-codes"
 import catchAsync from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import { Role, Status, type IGetUsers } from "./user.interface";
+import { Role, Status, type IGetUsers, type IOtherParams } from "./user.interface";
+import { paginate, type IPaginateOp } from "../../utils/paginate";
 
 const createPatient = catchAsync(async (req: Request, res: Response) => {
 
@@ -49,35 +50,41 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
 
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
     const {
-        page = 1,
-        limit = 10,
+        // page = 1,
+        // limit = 10,
+        // sortBy = "createdAt",
+        // sortOrder = "asc",
         search = "",
-        sortBy = "createdAt",
-        sortOrder = "asc",
         role,
         status,
     } = req.query;
 
-    const queryParams: IGetUsers = {
-        page: Number(page),
-        limit: Number(limit),
-        searchTerm: String(search),
-        sortBy: String(sortBy),
-        sortOrder: String(sortOrder),
+    // const queryParams: IGetUsers = {
+    //     page: Number(page),
+    //     limit: Number(limit),
+    //     searchTerm: String(search),
+    //     sortBy: String(sortBy),
+    //     sortOrder: String(sortOrder),
+    // };
+    
+
+    const queryParams = paginate(req.query)
+
+
+    const otherParams: IOtherParams = {
+        searchTerm: String(search)
     };
     
-    
     if (Object.values(Role).includes(role as Role)) {
-        queryParams.role = role as Role;
+        otherParams.role = role as Role;
     }
-    
     
     if (Object.values(Status).includes(status as Status)) {
-        queryParams.status = status as Status;
+        otherParams.status = status as Status;
     }
     
-    console.log("qparams", queryParams)
-    const result = await userServices.getAllUser(queryParams);
+    console.log("oparams", otherParams)
+    const result = await userServices.getAllUser(queryParams, otherParams);
 
     sendResponse(res, {
         statusCode: httpStatus.ACCEPTED,

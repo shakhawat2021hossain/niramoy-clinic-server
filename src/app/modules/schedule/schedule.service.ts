@@ -85,9 +85,17 @@ const getAvailableSchedulesForDoctor = async (payload: JwtPayload, queryParams: 
     return availableSchedules;
 };
 
+const deleteSchedule = async (id: string) => {
+    const result = await prisma.schedule.delete({
+        where: { id }
+    })
+    return result
+}
+
 
 
 export const scheduleServices = {
     createSchedules,
-    getAvailableSchedulesForDoctor
+    getAvailableSchedulesForDoctor,
+    deleteSchedule
 }

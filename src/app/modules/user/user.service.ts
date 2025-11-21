@@ -2,7 +2,8 @@ import type { Request } from "express"
 import { prisma } from "../../utils/prisma"
 import bcrypt from "bcrypt"
 import { fileUploader } from "../../utils/fileUpload"
-import { Role, type IGetUsers } from "./user.interface"
+import { Role, type IGetUsers, type IOtherParams } from "./user.interface"
+import type { IPaginateOp } from "../../utils/paginate"
 
 const createPatient = async (req: Request) => {
     // console.log(payload)
@@ -106,9 +107,10 @@ const createAdmin = async (req: Request) => {
 
 
 
-const getAllUser = async ({ page, limit, searchTerm, sortBy, sortOrder, role, status }: IGetUsers) => {
+const getAllUser = async ({ page, limit, sortBy, sortOrder }: IPaginateOp, otherParams: IOtherParams) => {
     // console.log(page, limit, searchTerm, sortBy, sortOrder)
     const skip = (page - 1) * limit
+    const { role, status, searchTerm } = otherParams
 
 
     const users = await prisma.user.findMany({
