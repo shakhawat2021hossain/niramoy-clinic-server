@@ -50,11 +50,24 @@ const createSchedules = async (payload: any) => {
     return schedules;
 };
 
-const getAvailableSchedulesForDoctor = async (payload: JwtPayload, queryParams: IPaginateOp) => {
+const getAvailableSchedulesForDoctor = async (payload: JwtPayload, queryParams: IPaginateOp, dateFilter: any) => {
 
-    // const {} = paginate()
     const { limit, page, skip, sortBy, sortOrder } = queryParams
     console.log(queryParams)
+
+    const {from, to} = dateFilter
+    const dateConditions: any = {}
+    if(to && from){
+        dateConditions.AND = [
+            {
+                startTime: {gte: new Date(from)}
+            },
+            {
+                endTime: {lte: new Date(to)}
+            }
+        ]
+    }
+
 
     const doctor = await prisma.doctor.findUniqueOrThrow({
         where: { email: payload.email }
@@ -73,7 +86,8 @@ const getAvailableSchedulesForDoctor = async (payload: JwtPayload, queryParams: 
     // available
     const availableSchedules = await prisma.schedule.findMany({
         where: {
-            id: { notIn: takenIds }
+            id: { notIn: takenIds },
+            ...dateConditions
         },
         skip,
         take: limit,
@@ -84,6 +98,13 @@ const getAvailableSchedulesForDoctor = async (payload: JwtPayload, queryParams: 
 
     return availableSchedules;
 };
+
+/*
+filtering based on date:
+1. from, to
+2. startDate gte from
+3. endDate lte to
+*/
 
 const deleteSchedule = async (id: string) => {
     const result = await prisma.schedule.delete({

@@ -25,6 +25,6 @@ export const paginate = (options: IPaginate): IPaginateOp => {
         limit,
         skip,
         sortBy: options.sortBy || "createdAt",
-        sortOrder: options.sortOrder === "asc" ? "asc" : "desc"
+        sortOrder: options.sortOrder === "desc" ? "desc" : "asc"
     };
 };

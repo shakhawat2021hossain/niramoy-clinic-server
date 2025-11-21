@@ -21,9 +21,11 @@ const schedule = catchAsync(async (req: Request, res: Response) => {
 
 const getAvailableSchedulesForDoctor = catchAsync(async (req: Request, res: Response) => {
     const queryParams = paginate(req.query)
-    console.log(queryParams)
+    const {from, to} = req.query
 
-    const result = await scheduleServices.getAvailableSchedulesForDoctor(req.user as JwtPayload, queryParams)
+    // console.log(queryParams)
+
+    const result = await scheduleServices.getAvailableSchedulesForDoctor(req.user as JwtPayload, queryParams, {from, to})
     sendResponse(res, {
         statusCode: httpStatus.CREATED,
         data: result,
