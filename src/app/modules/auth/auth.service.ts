@@ -5,8 +5,9 @@ import { prisma } from "../../utils/prisma"
 import AppError from "../../utils/AppError"
 import { generateTokens } from "../../utils/jwt"
 import envVars from "../../config/envVars"
+import type { User } from "@prisma/client"
 
-const login = async (payload: Partial<IUser>) => {
+const login = async (payload: Partial<User>) => {
     // console.log(payload)
     const user = await prisma.user.findUniqueOrThrow({
         where: { email: payload.email }
@@ -19,7 +20,7 @@ const login = async (payload: Partial<IUser>) => {
         throw new AppError(httpStatus.BAD_REQUEST, "Invalid Credentials")
     }
 
-    const {accessToken, refreshToken} = generateTokens({email: user.email, role: user.role as Role})
+    const {accessToken, refreshToken} = generateTokens({email: user.email, role: user.role as Role, id: user.id})
 
     return {
         accessToken, 

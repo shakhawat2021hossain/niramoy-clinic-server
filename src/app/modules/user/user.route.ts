@@ -38,7 +38,7 @@ router.post(
 
 router.get(
     '/',
-    checkAuth(Role.PATIENT),
+    // checkAuth(Role.PATIENT),
     userController.getAllUser)
 
 export const userRoutes = router
