@@ -46,7 +46,7 @@ const createDoctor = async (req: Request) => {
     }
     const hashedPass = await bcrypt.hash(req.body.password, 10)
     // console.log("hashed", hashedPass)
-    console.log("hitted")
+    // console.log("hitted")
 
     const userData = {
         email: req.body.doctor.email,
@@ -61,7 +61,10 @@ const createDoctor = async (req: Request) => {
         })
 
         return await tnx.doctor.create({
-            data: req.body.doctor
+            data: {
+                ...req.body.doctor,
+                profilePhoto: req.body.profilePhoto
+            }
         })
     })
     // console.log("user creation",result)
