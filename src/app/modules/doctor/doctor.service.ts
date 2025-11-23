@@ -10,7 +10,9 @@ import type { IDoctorUpdateIp } from "./doctor.interface"
 const getAllDr = async (queryParams: IPaginateOp, whereConditions: any) => {
 
     const { limit, page, skip, sortBy, sortOrder } = queryParams
-    console.log(queryParams)
+    // console.log(queryParams)
+    // console.log("wherecond", whereConditions.AND[0])
+    
 
 
     const result = await prisma.doctor.findMany({
@@ -19,12 +21,21 @@ const getAllDr = async (queryParams: IPaginateOp, whereConditions: any) => {
             [sortBy]: sortOrder
         },
         skip,
-        take: limit
+        take: limit,
+         include: {
+            doctorSpecialties: {
+                include: {
+                    specialities: true
+                }
+            }
+        }
     })
 
     const total = await prisma.doctor.count({
         where: whereConditions
     })
+
+
     return {
         meta: {
             total,
@@ -51,18 +62,18 @@ const updateDr = async (payload: Partial<IDoctorUpdateIp>, decodedToken: JwtPayl
         }
     }
 
-    console.log("dr", doctor)
+    // console.log("dr", doctor)
     
-    const { specialties, ...drData } = payload
-    console.log("payload", payload)
+    const { specialities, ...drData } = payload
+    // console.log("payload", payload)
     
     const result = await prisma.$transaction(async (tnx) => {
 
         // update specialities
-        if (specialties && specialties.length > 0) {
+        if (specialities && specialities.length > 0) {
 
             // remove
-            const deleteSpecialtyIds = specialties.filter((specialty) => specialty.isDeleted);
+            const deleteSpecialtyIds = specialities.filter((specialty) => specialty.isDeleted);
             for (const specialty of deleteSpecialtyIds) {
                 await tnx.doctorSpecialties.deleteMany({
                     where: {
@@ -74,7 +85,7 @@ const updateDr = async (payload: Partial<IDoctorUpdateIp>, decodedToken: JwtPayl
 
 
             // add
-            const createSpecialtyIds = specialties.filter((specialty) => !specialty.isDeleted);
+            const createSpecialtyIds = specialities.filter((specialty) => !specialty.isDeleted);
             for (const specialty of createSpecialtyIds) {
                 await tnx.doctorSpecialties.create({
                     data: {

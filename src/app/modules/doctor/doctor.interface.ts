@@ -13,8 +13,9 @@ export type IDoctorUpdateIp = {
     currentWorkingPlace: string;
     designation: string;
     isDeleted: boolean;
-    specialties: {
+    specialities: {
         specialtyId: string;
         isDeleted?: boolean;
     }[]
 }
+

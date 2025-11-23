@@ -16,7 +16,7 @@ export const buildWhere = (
             })),
         });
     }
-    console.log(filters) 
+    // console.log(filters) 
 
     // Filters
     Object.keys(filters).forEach(key => {
@@ -27,3 +27,15 @@ export const buildWhere = (
 
     return AND.length ? { AND } : {};
 };
+
+
+// how filter and search works
+/*
+obj = {
+    AND: [
+        OR: [{search}, {search}],
+        {filtering}
+    ]
+}
+
+*/

@@ -11,7 +11,7 @@ const getAllDr = catchAsync(async (req: Request, res: Response) => {
     
     
     const {searchTerm, sortBy, sortOrder, page, limit, ...filters} = req.query
-    const whereConditions = buildWhere(searchTerm as string,  ['name', 'email'], filters)
+    const whereConditions = buildWhere(searchTerm as string,  ['name', 'email', "doctorSpecialties"], filters)
     console.log(whereConditions)
 
     const queryParams = paginate(req.query)
