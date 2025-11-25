@@ -13,4 +13,6 @@ export default {
     cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
     access_token_secret: process.env.ACCESS_TOKEN_SECRET as string,
     refresh_token_secret: process.env.REFRESH_TOKEN_SECRET as string,
+    stripe_secret_key: process.env.STRIPE_SECRET_KEY as string,
+
 }
